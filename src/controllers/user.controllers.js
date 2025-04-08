@@ -1,9 +1,9 @@
-import { asynchandler } from "../utils/asyncHandler";
-import { User } from "../models/user.model";
-import { apiError } from "../utils/apierrorHandler";
+import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { apiError } from "../utils/apiError.js";
+import { asynchandler } from "../utils/asynchandler.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 import mongoose from "mongoose";
-import { ApiResponse } from "../utils/apiResponse";
 
 const generateAccessAndRefreshtoken=async(userId)=>{
     try{
@@ -184,22 +184,30 @@ const changeCurrentPassword=asynchandler(async(req,res)=>{
 })
 
 const updateAccountDetails=asynchandler(async(req,res)=>{
-    const{fullname,email}=req.body;
-
-    if(!fullname || !email){
-        throw new apiError(400,"All fields are required");
+    const {id}=req.params._id;
+    const {updates}=req.body;
+    if(!updates){
+        throw new apiError(400,"Updates are required");
     }
-
-    User.findById(
-        req.user?._id,
+    if(!id){
+        throw new apiError(400,"User id is required");
+    }
+    const user= await User.findByIdAndUpdate(
+        id,
         {
             $set:{
-                fullname,
-                email:email.toLowerCase()
+                ...updates
             }
         },
-        {new:true}
-    ).select("-password")
+        {
+            new:true,
+            runValidators:true
+        }
+    )
+    if (!user) {
+        throw new apiError(404, "User not found");
+    }
+
 
     return res
     .status(200)
@@ -211,6 +219,7 @@ const getCurrentUser=asynchandler(async(req,res)=>{
     .status(200)
     .json(200,res.user,"currentuser fetched successfully");
 })
+
 
 export{
     generateAccessAndRefreshtoken,
