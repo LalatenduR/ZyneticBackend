@@ -18,7 +18,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:8000',
+        url: 'https://zyneticbackend-production.up.railway.app',
       },
     ],
   },
