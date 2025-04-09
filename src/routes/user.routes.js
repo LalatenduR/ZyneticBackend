@@ -27,7 +27,7 @@ export default router;
 
 /**
  * @swagger
- * /api/users/register:
+ * /api/v1/users/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
@@ -51,7 +51,7 @@ export default router;
 
 /**
  * @swagger
- * /api/users/login:
+ * /api/v1/users/login:
  *   post:
  *     summary: Login user
  *     tags: [Auth]
@@ -73,7 +73,7 @@ export default router;
 
 /**
  * @swagger
- * /api/users/logout:
+ * /api/v1/users/logout:
  *   post:
  *     summary: Logout user
  *     tags: [Auth]
@@ -84,7 +84,7 @@ export default router;
 
 /**
  * @swagger
- * /api/users/current:
+ * /api/v1/users/current:
  *   get:
  *     summary: Get current user
  *     tags: [Auth]
