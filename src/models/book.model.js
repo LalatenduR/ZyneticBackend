@@ -22,6 +22,8 @@ const bookSchema=new Schema({
     rating:{
         type:Number,
         default:0,
+        max:10,
+        min:0,
     },
     publishedDate:{
         type:Date,

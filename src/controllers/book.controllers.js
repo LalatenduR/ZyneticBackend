@@ -31,10 +31,24 @@ const createBook = asynchandler(async (req, res) => {
 })
 
 const getAllBooks = asynchandler(async (req, res) => {
-    const books = await Book.find({}).sort({createdAt:-1});
-    if (!books) {
-        throw new apiError(404, "Books not found");
+    const {author,category,rating}=req.query;
+    const filter={};
+    if(author){
+        filter.author={$regex:author,$options:"i"};
     }
+    if(category){
+        filter.category={$regex:category,$options:"i"};
+    }
+    if(rating){
+        filter.rating={$gte:rating};
+    }
+
+    const books=await Book.find(filter).sort({createdAt:-1});
+
+    if(!books){
+        throw new apiError(404,"Books not found");
+    }
+    
     return res.status(200).json(new ApiResponse(200, "Books fetched", books));
 })
 
@@ -90,6 +104,18 @@ const deleteBookById = asynchandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, "Book deleted", book));
 })
 
+const searchBooks = asynchandler(async (req, res) => {
+    const {title}=req.body;
+    const filter={};
+    if(title){
+        filter.title={$regex:title,$options:"i"};
+    }
+    const book=await Book.find(filter).sort({createdAt:-1});
+    if(!book){
+        throw new apiError(404,"Books not found");
+    }
+    return res.status(200).json(new ApiResponse(200, "Book fetched", book));
+})
 
 export{
     createBook,
@@ -97,4 +123,5 @@ export{
     getBooksById,
     updateBookById,
     deleteBookById,
+    searchBooks
 }

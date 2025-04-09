@@ -5,7 +5,8 @@ import {
     getAllBooks,
     getBooksById,
     updateBookById,
-    deleteBookById
+    deleteBookById,
+    searchBooks
 } from "../controllers/book.controllers.js";
 
 
@@ -17,5 +18,6 @@ router.route("/:id")
 .get(authVerify,getBooksById)
 .put(authVerify,updateBookById)
 .delete(authVerify,deleteBookById);
+router.route("/search").post(authVerify,searchBooks);
 
 export default router;
