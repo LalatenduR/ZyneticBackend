@@ -25,9 +25,12 @@ npm install
 3. **Create `.env` file**
 ```env
 PORT=8000
-MONGODB_URI=your_mongodb_connection_string
-CORS_ORIGIN=http://localhost:3000
-JWT_SECRET=your_jwt_secret
+MONGODB_URI=your-mongodb-uri
+CORS_ORIGIN=*
+ACCESS_JWT_SECRET=your-access-jwt-secret
+ACCESS_TOKEN_EXPIRY=1d
+REFRESH_JWT_SECRET=your-refresh-jwt-secret
+REFRESH_TOKEN_EXPIRY=7d
 ```
 
 4. **Run the server locally**
