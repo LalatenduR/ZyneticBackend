@@ -31,7 +31,7 @@ const createBook = asynchandler(async (req, res) => {
 })
 
 const getAllBooks = asynchandler(async (req, res) => {
-    const {author,category,rating}=req.query;
+    const {author,category,rating,page,limit,sortBy,sortOrder}=req.query;
     const filter={};
     if(author){
         filter.author={$regex:author,$options:"i"};
@@ -43,13 +43,27 @@ const getAllBooks = asynchandler(async (req, res) => {
         filter.rating={$gte:rating};
     }
 
-    const books=await Book.find(filter).sort({createdAt:-1});
+    const sortOption={};
+    sortOption[sortBy]=sortOrder==="desc"?-1:1;
 
+
+    const skip=(Number(page)-1)*Number(limit);
+    const books=await Book.find(filter)
+    .sort(sortOption)
+    .skip(skip)
+    .limit(Number(limit));
     if(!books){
         throw new apiError(404,"Books not found");
     }
     
-    return res.status(200).json(new ApiResponse(200, "Books fetched", books));
+    const totalBooks = await Book.countDocuments(filter);
+    return res.status(200).json(new ApiResponse(200, "Books fetched",{
+        books,
+        page:Number(page),
+        limit:Number(limit),
+        totalPages:Math.ceil(totalBooks/Number(limit)),
+        totalBooks
+    }));
 })
 
 const getBooksById = asynchandler(async (req, res) => {

@@ -31,4 +31,6 @@ const bookSchema=new Schema({
     }
 },{timestamps:true})
 
+bookSchema.plugin(mongooseAggregatePaginate);
+
 export const Book=mongoose.model("Book",bookSchema);
