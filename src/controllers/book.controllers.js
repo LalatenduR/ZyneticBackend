@@ -5,8 +5,16 @@ import { asynchandler } from "../utils/asynchandler.js";
 
 const createBook = asynchandler(async (req, res) => {
     const {title, author, category, price, publishedDate} = req.body;
-    if ([title, author, category, price, publishedDate].some(field => !field?.trim() === "")) {
-        throw new apiError(400, "All fields are required");
+    const stringFields = [title, author, category];
+    const hasEmptyString = stringFields.some(
+      field => typeof field !== 'string' || field.trim() === ""
+    );
+
+    const isPriceInvalid = typeof price !== 'number' || isNaN(price);
+    const publishedDateObj = new Date(publishedDate);
+    const isDateInvalid = isNaN(publishedDateObj.getTime());
+    if (hasEmptyString) {
+        return res.status(400).json({ message: "All fields are required and must be valid." });
     }
     const book = await Book.create({
         title,
@@ -31,7 +39,7 @@ const getAllBooks = asynchandler(async (req, res) => {
 })
 
 const getBooksById = asynchandler(async (req, res) => {
-    const {id} = req.params._id;
+    const {id} = req.params;
     if (!id) {
         throw new apiError(400, "Book id is required");
     }
@@ -43,7 +51,7 @@ const getBooksById = asynchandler(async (req, res) => {
 })
 
 const updateBookById = asynchandler(async (req, res) => {
-    const {id} = req.params._id;
+    const {id} = req.params;
     const updates=req.body;
     if (!updates) {
         throw new apiError(400, "Book updates are required");
@@ -71,7 +79,7 @@ const updateBookById = asynchandler(async (req, res) => {
 })
 
 const deleteBookById = asynchandler(async (req, res) => {
-    const {id} = req.params._id;
+    const {id} = req.params;
     if (!id) {
         throw new apiError(400, "Book id is required");
     }
