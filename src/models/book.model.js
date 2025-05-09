@@ -28,6 +28,11 @@ const bookSchema=new Schema({
     publishedDate:{
         type:Date,
         required:true,
+    },
+    publishedby:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        required:true
     }
 },{timestamps:true})
 

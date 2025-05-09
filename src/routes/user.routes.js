@@ -5,6 +5,7 @@ import {
     loginUser,
     logoutUser,
     getCurrentUser,
+    purchaseBook
 } from "../controllers/user.controllers.js";
 
 
@@ -14,6 +15,7 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(authVerify,logoutUser);
 router.route("/current").get(authVerify,getCurrentUser);
+router.route("/purchase").get(authVerify,purchaseBook);
 
 
 

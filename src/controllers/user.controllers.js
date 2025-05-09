@@ -4,6 +4,7 @@ import { apiError } from "../utils/apiError.js";
 import { asynchandler } from "../utils/asynchandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import mongoose from "mongoose";
+import { Book } from "../models/book.model.js";
 
 const generateAccessAndRefreshtoken=async(userId)=>{
     try{
@@ -221,6 +222,34 @@ const getCurrentUser=asynchandler(async(req,res)=>{
 })
 
 
+export const purchaseBook = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { bookId } = req.body; 
+
+        const book = await Book.findById(bookId);
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { purchasedBooks: bookId } },
+            { new: true }
+        ).populate("purchasedBooks");
+
+        return res.status(200).json({
+            message: "Book purchased successfully",
+            purchasedBooks: user.purchasedBooks
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Something went wrong" });
+    }
+};
+
+
 export{
     generateAccessAndRefreshtoken,
     registerUser,
@@ -229,5 +258,6 @@ export{
     refreshAccessToken,
     changeCurrentPassword,
     updateAccountDetails,
-    getCurrentUser
+    getCurrentUser,
+    purchaseBook
 }

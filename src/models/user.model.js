@@ -31,6 +31,10 @@ const userSchema=new Schema({
     refreshToken:{
         type:String,
     },
+    purchasedBooks:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Book"
+    }]
 },{timestamps:true});
 
 userSchema.pre("save",async function(next){

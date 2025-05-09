@@ -2,6 +2,7 @@ import {ApiResponse} from "../utils/apiResponse.js";
 import { apiError} from "../utils/apiError.js";
 import { Book } from "../models/book.model.js";
 import { asynchandler } from "../utils/asynchandler.js";
+import { User } from "../models/user.model.js";
 
 const createBook = asynchandler(async (req, res) => {
     const {title, author, category, price, publishedDate} = req.body;
@@ -131,11 +132,35 @@ const searchBooks = asynchandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, "Book fetched", book));
 })
 
+
+export const getPurchasedBooks = async (req, res) => {
+    try {
+        const userId = req.user._id; // assuming userId from JWT middleware
+
+        const user = await User.findById(userId)
+            .populate("purchasedBooks"); // populates with book details
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({
+            purchasedBooks: user.purchasedBooks
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Something went wrong" });
+    }
+};
+
+
 export{
     createBook,
     getAllBooks,
     getBooksById,
     updateBookById,
     deleteBookById,
-    searchBooks
+    searchBooks,
+    getPurchasedBooks
 }
