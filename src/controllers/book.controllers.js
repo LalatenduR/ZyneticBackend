@@ -133,7 +133,7 @@ const searchBooks = asynchandler(async (req, res) => {
 })
 
 
-export const getPurchasedBooks = async (req, res) => {
+const getPurchasedBooks = async (req, res) => {
     try {
         const userId = req.user._id; // assuming userId from JWT middleware
 

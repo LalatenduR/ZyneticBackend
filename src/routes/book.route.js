@@ -20,7 +20,7 @@ router.route("/:id")
 .put(authVerify,updateBookById)
 .delete(authVerify,deleteBookById);
 router.route("/search").post(authVerify,searchBooks);
-router.route("/mybooks").get(authVerify,purchaseBook);
+router.route("/mybooks").get(authVerify,getPurchasedBooks);
 
 export default router;
 

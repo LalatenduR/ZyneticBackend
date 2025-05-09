@@ -222,7 +222,7 @@ const getCurrentUser=asynchandler(async(req,res)=>{
 })
 
 
-export const purchaseBook = async (req, res) => {
+const purchaseBook = async (req, res) => {
     try {
         const userId = req.user._id;
         const { bookId } = req.body; 
